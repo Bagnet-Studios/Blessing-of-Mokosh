@@ -23,13 +23,15 @@ void UHealthComponent::BeginPlay()
 
 void UHealthComponent::SetHealth(float NewHealth)
 {
-	Health = FMath::Clamp(NewHealth, 0.f,MaxHealth);
+	Health = FMath::Clamp(NewHealth, 0.f, MaxHealth);
 	OnHealthChanged.Broadcast(Health);
 }
 
 void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
 	AController* InstigatedBy, AActor* DamageCauser)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Character %s Health: %f"), *GetOwner()->GetName(), Health);
+	
 	if(Damage <= 0.f || IsDead() || !GetWorld())
 	{
 		return;
