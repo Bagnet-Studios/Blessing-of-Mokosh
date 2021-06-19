@@ -14,14 +14,14 @@
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("UpringArm"));
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bUsePawnControlRotation = true;
-	SpringArmComponent->SetUsingAbsoluteRotation(true); 
+	SpringArmComponent->SetUsingAbsoluteRotation(true);
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
-	CameraComponent->bUsePawnControlRotation = false; 
+	CameraComponent->bUsePawnControlRotation = false;
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 }
@@ -30,10 +30,12 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	check(HealthComponent);
-	
+
 	OnHealthChanged(HealthComponent->GetHealth());
 	HealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::OnHealthChanged);
+	
+	GetController()->SetControlRotation(FRotator(0, 0 ,CameraComponent->GetComponentRotation().Yaw));
 }
 
 void ABaseCharacter::Tick(float DeltaTime)
@@ -54,7 +56,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ABaseCharacter::MoveForward(float Amount)
 {
-	if(Amount == 0.f)
+	if (Amount == 0.f)
 	{
 		return;
 	}
@@ -63,7 +65,7 @@ void ABaseCharacter::MoveForward(float Amount)
 
 void ABaseCharacter::MoveRight(float Amount)
 {
-	if(Amount == 0.f)
+	if (Amount == 0.f)
 	{
 		return;
 	}
@@ -81,4 +83,3 @@ void ABaseCharacter::OnDeath()
 
 	GetCharacterMovement()->DisableMovement();
 }
-

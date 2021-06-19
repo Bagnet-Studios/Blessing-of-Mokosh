@@ -42,7 +42,6 @@ protected:
 private:	
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
-	// void Attack();
 	void OnHealthChanged(float Health);
 	void OnDeath();
 
