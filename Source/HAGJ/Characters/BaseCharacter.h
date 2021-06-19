@@ -19,10 +19,14 @@ class HAGJ_API ABaseCharacter : public ACharacter
 public:
 	ABaseCharacter();
 	virtual void Tick(float DeltaTime) override;
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UDecalComponent* CursorToWorld;
+
+	UFUNCTION(BlueprintCallable)
+float GetMovementDirection() const;
 
 protected:
 	virtual void BeginPlay() override;

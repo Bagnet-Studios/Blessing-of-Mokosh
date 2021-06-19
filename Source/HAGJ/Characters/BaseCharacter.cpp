@@ -41,6 +41,18 @@ void ABaseCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+float ABaseCharacter::GetMovementDirection() const
+{
+	if(GetVelocity().IsZero())
+	{
+		return 0.f;
+	}
+	const auto VelocityNormal = GetVelocity().GetSafeNormal();
+	const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
+	const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
+	const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
+	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z);
+}
 
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -58,7 +70,7 @@ void ABaseCharacter::MoveForward(float Amount)
 	{
 		return;
 	}
-	AddMovementInput(GetActorForwardVector(), Amount);
+	AddMovementInput(CameraComponent->GetForwardVector(), Amount);
 }
 
 void ABaseCharacter::MoveRight(float Amount)
@@ -67,12 +79,12 @@ void ABaseCharacter::MoveRight(float Amount)
 	{
 		return;
 	}
-	AddMovementInput(GetActorRightVector(), Amount);
+	AddMovementInput(CameraComponent->GetRightVector(), Amount);
 }
 
 void ABaseCharacter::OnHealthChanged(float Health)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Player Health: %f"), HealthComponent->GetHealth());
+	UE_LOG(LogTemp, Warning, TEXT("Character %s Health: %f"), *GetOwner()->GetName(), HealthComponent->GetHealth());
 }
 
 void ABaseCharacter::OnDeath()
