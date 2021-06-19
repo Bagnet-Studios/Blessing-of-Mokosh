@@ -40,7 +40,7 @@ void UWeaponComponent::SpawnWeapon()
 		return;
 	}
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-	//CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttackSocketName);
+	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, "WeaponSocket");
 }
 
 void UWeaponComponent::Attack()
