@@ -18,16 +18,30 @@ void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Character = Cast<ABaseCharacter>(GetOwner());
-	WeaponMesh->OnComponentBeginOverlap.AddDynamic(this, &ABaseWeapon::BeginOverlap);
+	Character = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	WeaponMesh->OnComponentBeginOverlap.AddDynamic(this, &ABaseWeapon::OnHit);
 }
 
 void ABaseWeapon::Attack()
 {
 	UE_LOG(LogTemp, Display, TEXT("FIRE!"));
+	//Play anim montage
+	bIsAttacking = true;
+	//On end animation -> bool bAttack = false
 }
 
-void ABaseWeapon::BeginOverlap(UPrimitiveComponent* OverlappedComponent,AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult &SweepResult)
+void ABaseWeapon::OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UGameplayStatics::ApplyDamage(OtherActor, Damage, Character->GetController(), Character, DamageType);
+	if(bIsAttacking == false)
+	{
+		return;
+	}
+		
+	if(!Character)
+	{
+		return;
+	}
+	
+	ABaseCharacter* DamagedActor = Cast<ABaseCharacter>(OtherActor);
+	UGameplayStatics::ApplyDamage(DamagedActor, Damage, Character->GetInstigatorController(), this, DamageType);	
 }
