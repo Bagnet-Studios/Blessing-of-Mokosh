@@ -26,7 +26,7 @@ public:
 	class UDecalComponent* CursorToWorld;
 
 	UFUNCTION(BlueprintCallable)
-float GetMovementDirection() const;
+	FVector GetMovementDirection() const;
 
 protected:
 	virtual void BeginPlay() override;
