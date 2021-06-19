@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "HAGJ/Components/HealthComponent.h"
+#include "HAGJ/Components/WeaponComponent.h"
 
 #include "BaseCharacter.generated.h"
 
@@ -20,6 +21,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UDecalComponent* CursorToWorld;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -29,9 +33,8 @@ protected:
 	USpringArmComponent* SpringArmComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UHealthComponent* HealthComponent;
-	
-	// UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	// USTUWeaponComponents* WeaponComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UWeaponComponent* WeaponComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animations")
 	UAnimMontage* DeathAnimMontage = nullptr;
