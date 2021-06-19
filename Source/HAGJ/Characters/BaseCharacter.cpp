@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BaseCharacter.h"
+#include <HAGJ/Characters/BaseCharacter.h>
 
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
@@ -34,8 +34,6 @@ void ABaseCharacter::BeginPlay()
 	OnHealthChanged(HealthComponent->GetHealth());
 	HealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::OnHealthChanged);
-	
-	GetController()->SetControlRotation(FRotator(0, 0 ,CameraComponent->GetComponentRotation().Yaw));
 }
 
 void ABaseCharacter::Tick(float DeltaTime)
