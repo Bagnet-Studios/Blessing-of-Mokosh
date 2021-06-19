@@ -12,6 +12,8 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Health = MaxHealth;
+	
 	AActor* ComponentOwner = GetOwner();
 	if(ComponentOwner)
 	{
