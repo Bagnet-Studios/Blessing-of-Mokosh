@@ -19,8 +19,9 @@ public:
 	UWeaponComponent();
 
 	void Attack();
+	void DeSpawnWeapon() const;
 
-	protected:
+protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
@@ -28,7 +29,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	FName WeaponAttackSocketName = "WeaponSocket";
 	
-	private:
+private:
 	UPROPERTY()
 	ABaseWeapon* CurrentWeapon = nullptr;
 	

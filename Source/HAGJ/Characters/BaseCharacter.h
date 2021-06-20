@@ -42,13 +42,16 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animations")
 	UAnimMontage* DeathAnimMontage = nullptr;
+	
+	FTimerHandle DeSpawnWeaponTimerHandle;
 
 private:	
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
 	void OnHealthChanged(float Health);
 	void OnDeath();
-
+	void DestroyCharacter();
+	
 };
 
 

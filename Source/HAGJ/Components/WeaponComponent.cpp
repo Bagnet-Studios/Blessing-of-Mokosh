@@ -3,6 +3,7 @@
 
 #include "WeaponComponent.h"
 
+#include "BehaviorTree/BehaviorTreeTypes.h"
 #include "Components/DecalComponent.h"
 #include "GameFramework/Character.h"
 #include "HAGJ/Characters/BaseCharacter.h"
@@ -34,7 +35,7 @@ void UWeaponComponent::SpawnWeapon()
 	{
 		return;
 	}
-	CurrentWeapon =  GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
+	CurrentWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
 	if(!CurrentWeapon)
 	{
 		return;
@@ -43,13 +44,23 @@ void UWeaponComponent::SpawnWeapon()
 	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, "WeaponSocket");
 }
 
+void UWeaponComponent::DeSpawnWeapon() const
+{
+	if(!GetWorld())
+	{
+		return;
+	}
+
+	CurrentWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	CurrentWeapon->OnHolderDeath();
+}
+
 void UWeaponComponent::Attack()
 {
 	if(!CurrentWeapon)
 	{
 		return;
 	}
-
 	CurrentWeapon->Attack();
 }
 

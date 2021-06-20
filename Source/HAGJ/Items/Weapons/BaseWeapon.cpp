@@ -35,13 +35,20 @@ void ABaseWeapon::OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 	if(bCanAttack == false)
 	{
 		return;
-	}
-		
+	}		
 	if(!Character)
 	{
 		return;
 	}
-	
+	if(OtherActor == Character)
+	{
+		return;
+	}
 	ABaseCharacter* DamagedActor = Cast<ABaseCharacter>(OtherActor);
 	UGameplayStatics::ApplyDamage(DamagedActor, Damage, Character->GetInstigatorController(), this, DamageType);	
+}
+
+void ABaseWeapon::OnHolderDeath() const
+{
+	WeaponMesh->SetSimulatePhysics(true);
 }

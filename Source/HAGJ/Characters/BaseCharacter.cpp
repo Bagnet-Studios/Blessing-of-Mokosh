@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "HAGJ/Components/WeaponComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ABaseCharacter::ABaseCharacter()
@@ -71,7 +72,6 @@ void ABaseCharacter::MoveForward(float Amount)
 		return;
 	}
 	AddMovementInput(CameraComponent->GetForwardVector(), Amount);
-	UE_LOG(LogTemp, Warning, TEXT("Forward - %f"), Amount);
 }
 
 void ABaseCharacter::MoveRight(float Amount)
@@ -81,7 +81,6 @@ void ABaseCharacter::MoveRight(float Amount)
 		return;
 	}
 	AddMovementInput(CameraComponent->GetRightVector(), Amount);
-	UE_LOG(LogTemp, Warning, TEXT("Right - %f"), Amount);
 }
 
 void ABaseCharacter::OnHealthChanged(float Health)
@@ -93,5 +92,20 @@ void ABaseCharacter::OnDeath()
 {
 	PlayAnimMontage(DeathAnimMontage);
 
-	GetCharacterMovement()->DisableMovement();
+	if(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
+	{
+		GetCharacterMovement()->DisableMovement();	
+	}	
+	
+
+	GetWorld()->GetTimerManager().SetTimer(DeSpawnWeaponTimerHandle, this, &ABaseCharacter::DestroyCharacter, 1.f, false, 5.f);
+	UE_LOG(LogTemp, Warning, TEXT("start timer"));
+}
+
+void ABaseCharacter::DestroyCharacter()
+{
+	GetWorld()->GetTimerManager().ClearTimer(DeSpawnWeaponTimerHandle);
+	UE_LOG(LogTemp, Warning, TEXT("destroy"));
+	Destroy();
+	WeaponComponent->DeSpawnWeapon();
 }
