@@ -14,7 +14,9 @@ class HAGJ_API UHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+	float Health = 0.f;
+	
 	UHealthComponent();
 
 	float GetHealth() const { return Health; }
@@ -31,7 +33,7 @@ protected:
 	float MaxHealth = 100.f;
 
 private:	
-	float Health = 0.f;
+	
 	
 	UFUNCTION()
 	void OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
