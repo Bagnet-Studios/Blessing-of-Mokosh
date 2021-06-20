@@ -71,6 +71,7 @@ void ABaseCharacter::MoveForward(float Amount)
 		return;
 	}
 	AddMovementInput(CameraComponent->GetForwardVector(), Amount);
+	UE_LOG(LogTemp, Warning, TEXT("Forward - %f"), Amount);
 }
 
 void ABaseCharacter::MoveRight(float Amount)
@@ -80,6 +81,7 @@ void ABaseCharacter::MoveRight(float Amount)
 		return;
 	}
 	AddMovementInput(CameraComponent->GetRightVector(), Amount);
+	UE_LOG(LogTemp, Warning, TEXT("Right - %f"), Amount);
 }
 
 void ABaseCharacter::OnHealthChanged(float Health)

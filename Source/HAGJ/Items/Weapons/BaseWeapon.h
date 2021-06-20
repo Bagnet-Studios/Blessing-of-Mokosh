@@ -30,9 +30,10 @@ protected:
 	TSubclassOf<UDamageType> DamageType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float Damage = 50.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	bool bCanAttack = false;
 
 private:
 	ABaseCharacter* Character;
 
-	bool bIsAttacking = false;
 };
