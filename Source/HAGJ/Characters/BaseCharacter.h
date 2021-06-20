@@ -22,6 +22,10 @@ public:
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UHealthComponent* HealthComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UWeaponComponent* WeaponComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UDecalComponent* CursorToWorld;
 
@@ -41,11 +45,6 @@ protected:
 	UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UHealthComponent* HealthComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UWeaponComponent* WeaponComponent;
-
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animations")
 	UAnimMontage* DeathAnimMontage = nullptr;

@@ -22,7 +22,8 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 	SpawnWeapon();
 
-	Character = Cast<ABaseCharacter>(GetOwner());
+	PlayerCharacter = Cast<ABaseCharacter>(GetOwner());
+	//Character = Cast<ABaseCharacter>(GetOwner());
 }
 
 void UWeaponComponent::SpawnWeapon()
@@ -31,7 +32,7 @@ void UWeaponComponent::SpawnWeapon()
 	{
 		return;
 	}		
-	//Character = Cast<ACharacter>(GetOwner());
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
 	if(!Character)
 	{
 		return;
@@ -42,7 +43,7 @@ void UWeaponComponent::SpawnWeapon()
 		return;
 	}
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttackSocketName);
+	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, "WeaponSocket");
 }
 
 void UWeaponComponent::DeSpawnWeapon() const
@@ -58,7 +59,7 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
-	Character->RotateCharacterToCursor();
+	PlayerCharacter->RotateCharacterToCursor();
 	if(!CurrentWeapon)
 	{
 		return;
@@ -68,13 +69,13 @@ void UWeaponComponent::Attack()
 
 void UWeaponComponent::AttackRange()
 {
-	Character->RotateCharacterToCursor();
+	PlayerCharacter->RotateCharacterToCursor();
 	if(ProjectileClass)
 	{
-		FVector SpawnLocation = Character->ProjectileSpawnPoint->GetComponentLocation();
-		FRotator SpawnRotation = Character->ProjectileSpawnPoint->GetComponentRotation();
+		FVector SpawnLocation = PlayerCharacter->ProjectileSpawnPoint->GetComponentLocation();
+		FRotator SpawnRotation = PlayerCharacter->ProjectileSpawnPoint->GetComponentRotation();
 		ABaseProjectile* TempProjectile = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-		TempProjectile->SetOwner(Character);
+		TempProjectile->SetOwner(PlayerCharacter);
 	}
 }
 

@@ -20,6 +20,7 @@ public:
 	UWeaponComponent();
 
 	void Attack();
+	UFUNCTION(BlueprintCallable)
 	void AttackRange();
 	void DeSpawnWeapon() const;
 
@@ -40,5 +41,5 @@ private:
 	void SpawnWeapon();
 
 private:
-	ABaseCharacter* Character;
+	ABaseCharacter* PlayerCharacter;
 };
