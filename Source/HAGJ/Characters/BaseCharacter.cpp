@@ -23,6 +23,9 @@ ABaseCharacter::ABaseCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->bUsePawnControlRotation = false;
+	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Projectile point"));
+	ProjectileSpawnPoint->SetupAttachment(GetRootComponent());
+	
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 }
@@ -62,7 +65,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABaseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
-	PlayerInputComponent->BindAction("Attack", IE_Released, WeaponComponent, &UWeaponComponent::Attack);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, WeaponComponent, &UWeaponComponent::Attack);
+	PlayerInputComponent->BindAction("AttackRange", IE_Pressed, WeaponComponent, &UWeaponComponent::AttackRange);
 }
 
 void ABaseCharacter::MoveForward(float Amount)
@@ -99,13 +103,11 @@ void ABaseCharacter::OnDeath()
 	
 
 	GetWorld()->GetTimerManager().SetTimer(DeSpawnWeaponTimerHandle, this, &ABaseCharacter::DestroyCharacter, 1.f, false, 5.f);
-	UE_LOG(LogTemp, Warning, TEXT("start timer"));
 }
 
 void ABaseCharacter::DestroyCharacter()
 {
 	GetWorld()->GetTimerManager().ClearTimer(DeSpawnWeaponTimerHandle);
-	UE_LOG(LogTemp, Warning, TEXT("destroy"));
 	Destroy();
 	WeaponComponent->DeSpawnWeapon();
 }

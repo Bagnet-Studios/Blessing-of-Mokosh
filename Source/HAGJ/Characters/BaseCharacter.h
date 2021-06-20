@@ -28,6 +28,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector GetMovementDirection() const;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USceneComponent* ProjectileSpawnPoint;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RotateCharacterToCursor();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -39,6 +45,7 @@ protected:
 	UHealthComponent* HealthComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UWeaponComponent* WeaponComponent;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animations")
 	UAnimMontage* DeathAnimMontage = nullptr;

@@ -9,6 +9,7 @@
 #include "WeaponComponent.generated.h"
 
 
+class ABaseProjectile;
 class ABaseCharacter;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HAGJ_API UWeaponComponent : public UActorComponent
@@ -19,6 +20,7 @@ public:
 	UWeaponComponent();
 
 	void Attack();
+	void AttackRange();
 	void DeSpawnWeapon() const;
 
 protected:
@@ -28,6 +30,8 @@ protected:
 	TSubclassOf<ABaseWeapon> WeaponClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	FName WeaponAttackSocketName = "WeaponSocket";
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Projectile")
+	TSubclassOf<ABaseProjectile> ProjectileClass;	
 	
 private:
 	UPROPERTY()
@@ -36,5 +40,5 @@ private:
 	void SpawnWeapon();
 
 private:
-	ABaseCharacter* PlayerCharacter;
+	ABaseCharacter* Character;
 };

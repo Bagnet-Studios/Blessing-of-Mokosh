@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "HAGJ/Characters/BaseCharacter.h"
 #include "HAGJ/GameModes/BaseGameMode.h"
+#include "HAGJ/Items/Projectiles/BaseProjectile.h"
 #include "HAGJ/Items/Weapons/BaseWeapon.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -21,7 +22,7 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 	SpawnWeapon();
 
-	PlayerCharacter = Cast<ABaseCharacter>(GetOwner());
+	Character = Cast<ABaseCharacter>(GetOwner());
 }
 
 void UWeaponComponent::SpawnWeapon()
@@ -30,7 +31,7 @@ void UWeaponComponent::SpawnWeapon()
 	{
 		return;
 	}		
-	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	//Character = Cast<ACharacter>(GetOwner());
 	if(!Character)
 	{
 		return;
@@ -41,7 +42,7 @@ void UWeaponComponent::SpawnWeapon()
 		return;
 	}
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, "WeaponSocket");
+	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttackSocketName);
 }
 
 void UWeaponComponent::DeSpawnWeapon() const
@@ -57,10 +58,24 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
+	Character->RotateCharacterToCursor();
 	if(!CurrentWeapon)
 	{
 		return;
 	}
 	CurrentWeapon->Attack();
 }
+
+void UWeaponComponent::AttackRange()
+{
+	Character->RotateCharacterToCursor();
+	if(ProjectileClass)
+	{
+		FVector SpawnLocation = Character->ProjectileSpawnPoint->GetComponentLocation();
+		FRotator SpawnRotation = Character->ProjectileSpawnPoint->GetComponentRotation();
+		ABaseProjectile* TempProjectile = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+		TempProjectile->SetOwner(Character);
+	}
+}
+
 
