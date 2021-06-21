@@ -38,6 +38,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void RotateCharacterToCursor();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Currency")
+	int32 ArrowCount = 10;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -50,7 +53,7 @@ protected:
 	UAnimMontage* DeathAnimMontage = nullptr;
 	
 	FTimerHandle DeSpawnWeaponTimerHandle;
-
+	
 private:	
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
