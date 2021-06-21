@@ -59,7 +59,6 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
-	PlayerCharacter->RotateCharacterToCursor();
 	if(!CurrentWeapon)
 	{
 		return;
