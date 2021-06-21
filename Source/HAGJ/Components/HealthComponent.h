@@ -15,6 +15,7 @@ class HAGJ_API UHealthComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	float Health = 0.f;
 	
 	UHealthComponent();
