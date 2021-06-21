@@ -24,6 +24,12 @@ public:
 	void AttackRange();
 	void DeSpawnWeapon() const;
 
+	UPROPERTY(BlueprintReadOnly)
+	ABaseWeapon* CurrentWeapon = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
+	ABaseProjectile* CurrentProjectile = nullptr;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -35,8 +41,7 @@ protected:
 	TSubclassOf<ABaseProjectile> ProjectileClass;	
 	
 private:
-	UPROPERTY()
-	ABaseWeapon* CurrentWeapon = nullptr;
+	
 	
 	void SpawnWeapon();
 

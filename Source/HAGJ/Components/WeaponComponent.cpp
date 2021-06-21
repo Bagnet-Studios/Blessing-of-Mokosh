@@ -74,8 +74,8 @@ void UWeaponComponent::AttackRange()
 	{
 		FVector SpawnLocation = PlayerCharacter->ProjectileSpawnPoint->GetComponentLocation();
 		FRotator SpawnRotation = PlayerCharacter->ProjectileSpawnPoint->GetComponentRotation();
-		ABaseProjectile* TempProjectile = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-		TempProjectile->SetOwner(PlayerCharacter);
+		CurrentProjectile = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+		CurrentProjectile->SetOwner(PlayerCharacter);
 	}
 }
 

@@ -39,7 +39,7 @@ void ABaseProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	if(OtherActor && OtherActor != this && OtherActor != MyOwner)
 	{
 		ABaseCharacter* DamagedActor = Cast<ABaseCharacter>(OtherActor);
-		UGameplayStatics::ApplyDamage(DamagedActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
+		UGameplayStatics::ApplyDamage(DamagedActor, Damage * DamageMultiplier, MyOwner->GetInstigatorController(), this, DamageType);
 		Destroy();
 	}
 }
