@@ -69,6 +69,11 @@ void UWeaponComponent::Attack()
 
 void UWeaponComponent::AttackRange()
 {
+	if(PlayerCharacter->ArrowCount <= 0)
+	{
+		return;
+	}
+	
 	PlayerCharacter->RotateCharacterToCursor();
 	if(ProjectileClass)
 	{
@@ -76,6 +81,7 @@ void UWeaponComponent::AttackRange()
 		FRotator SpawnRotation = PlayerCharacter->ProjectileSpawnPoint->GetComponentRotation();
 		CurrentProjectile = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
 		CurrentProjectile->SetOwner(PlayerCharacter);
+		PlayerCharacter->ArrowCount--;
 	}
 }
 
