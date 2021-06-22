@@ -29,6 +29,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	ABaseProjectile* CurrentProjectile = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Damage")
+	bool bCanAttack = false;
 
 protected:
 	virtual void BeginPlay() override;
@@ -41,7 +43,8 @@ protected:
 	TSubclassOf<ABaseProjectile> ProjectileClass;	
 	
 private:
-	
+	UFUNCTION()
+	void StopAttack();
 	
 	void SpawnWeapon();
 

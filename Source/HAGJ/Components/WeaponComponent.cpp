@@ -63,8 +63,22 @@ void UWeaponComponent::Attack()
 	{
 		return;
 	}
+	if(!PlayerCharacter->MeleeAnimMontage)
+	{
+		return;
+	}		
+	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
+	bCanAttack = true;
 	CurrentWeapon->Attack();
+	FTimerHandle AttackTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UWeaponComponent::StopAttack, 0, false, PlayerCharacter->MeleeAnimMontage->CalculateSequenceLength());
 }
+
+void UWeaponComponent::StopAttack()
+{
+	bCanAttack = false;
+}
+
 
 void UWeaponComponent::AttackRange()
 {
@@ -72,7 +86,12 @@ void UWeaponComponent::AttackRange()
 	{
 		return;
 	}
-	
+	if(!PlayerCharacter->RangeAnimMontage)
+	{
+		return;
+	}	
+
+	PlayerCharacter->PlayAnimMontage(PlayerCharacter->RangeAnimMontage);
 	PlayerCharacter->RotateCharacterToCursor();
 	if(ProjectileClass)
 	{

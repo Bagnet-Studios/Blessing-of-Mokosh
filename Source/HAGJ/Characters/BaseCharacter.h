@@ -38,6 +38,13 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void RotateCharacterToCursor();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
+	UAnimMontage* DeathAnimMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
+	UAnimMontage* MeleeAnimMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
+	UAnimMontage* RangeAnimMontage = nullptr;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Currency")
 	int32 ArrowCount = 10;
 
@@ -48,9 +55,6 @@ protected:
 	UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
-	UAnimMontage* DeathAnimMontage = nullptr;
 	
 	FTimerHandle DeSpawnWeaponTimerHandle;
 	
