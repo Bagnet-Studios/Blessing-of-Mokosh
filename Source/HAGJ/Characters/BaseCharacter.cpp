@@ -101,18 +101,17 @@ void ABaseCharacter::OnDeath()
 		GetController()->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	}
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GetWorld()->GetTimerManager().ClearTimer(DeSpawnWeaponTimerHandle);
 	GetMesh()->SetCollisionProfileName(FName("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
 	PrimaryActorTick.bCanEverTick = false;
 
-	FTimerHandle DeathTimer;
-	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.f, false, 5.f);
+	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.01f, false, 10.f);
 	//DestroyCharacter();
 }
 
 void ABaseCharacter::DestroyCharacter()
-{	
+{
 	Destroy();
-	//WeaponComponent->DeSpawnWeapon();
+	WeaponComponent->DeSpawnWeapon();
+	GetWorld()->GetTimerManager().ClearTimer(DeathTimer);
 }

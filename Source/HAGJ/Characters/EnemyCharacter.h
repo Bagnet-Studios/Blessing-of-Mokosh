@@ -29,7 +29,6 @@ protected:
 	void Tick(float DeltaTime);
 	void BeginPlay();
 	void RotateTurret(FVector LookAtTarget);
-	void HandleDestruction();
 	void CheckFireCondition();
 	float ReturnDistanceToPlayer();
 	void AttackRange();

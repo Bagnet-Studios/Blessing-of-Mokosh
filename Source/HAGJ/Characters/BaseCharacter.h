@@ -56,7 +56,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
 	
-	FTimerHandle DeSpawnWeaponTimerHandle;
+	FTimerHandle DeathTimer;
 	
 private:	
 	void MoveForward(float Amount);
