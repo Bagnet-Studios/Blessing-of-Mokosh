@@ -45,17 +45,17 @@ void ABaseCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-FVector ABaseCharacter::GetMovementDirection() const
+float ABaseCharacter::GetMovementDirection() const
 {
 	if(GetVelocity().IsZero())
 	{
-		return FVector::ZeroVector;
+		return 0.f;
 	}
 	const auto VelocityNormal = GetVelocity().GetSafeNormal();
 	const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
 	const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
 	const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
-	return CrossProduct;
+	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z);
 }
 
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -93,21 +93,22 @@ void ABaseCharacter::OnHealthChanged(float Health)
 }
 
 void ABaseCharacter::OnDeath()
-{
-	PlayAnimMontage(DeathAnimMontage);
-
+{	
 	if(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
 	{
-		GetCharacterMovement()->DisableMovement();	
-	}	
-	
-
-	GetWorld()->GetTimerManager().SetTimer(DeSpawnWeaponTimerHandle, this, &ABaseCharacter::DestroyCharacter, 1.f, false, 5.f);
+		GetCharacterMovement()->DisableMovement();
+		GetController()->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	}		
+	DestroyCharacter();
 }
 
 void ABaseCharacter::DestroyCharacter()
 {
+	
 	GetWorld()->GetTimerManager().ClearTimer(DeSpawnWeaponTimerHandle);
-	Destroy();
+	GetMesh()->SetCollisionProfileName(FName("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+	PrimaryActorTick.bCanEverTick = false;
+	//Destroy();
 	WeaponComponent->DeSpawnWeapon();
 }

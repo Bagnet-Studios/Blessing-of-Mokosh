@@ -30,7 +30,7 @@ public:
 	class UDecalComponent* CursorToWorld;
 
 	UFUNCTION(BlueprintCallable)
-	FVector GetMovementDirection() const;
+	float GetMovementDirection() const;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* ProjectileSpawnPoint;
@@ -49,7 +49,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animations")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
 	UAnimMontage* DeathAnimMontage = nullptr;
 	
 	FTimerHandle DeSpawnWeaponTimerHandle;
