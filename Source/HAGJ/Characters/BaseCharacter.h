@@ -30,7 +30,7 @@ public:
 	class UDecalComponent* CursorToWorld;
 
 	UFUNCTION(BlueprintCallable)
-	FVector GetMovementDirection() const;
+	float GetMovementDirection() const;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* ProjectileSpawnPoint;
