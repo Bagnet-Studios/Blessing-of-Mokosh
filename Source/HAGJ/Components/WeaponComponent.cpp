@@ -59,7 +59,7 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
-	if(!CurrentWeapon || PlayerCharacter->HealthComponent->IsDead())
+	if(!CurrentWeapon || PlayerCharacter->HealthComponent->IsDead() || bCanAttack == true)
 	{
 		return;
 	}
@@ -71,12 +71,14 @@ void UWeaponComponent::Attack()
 	bCanAttack = true;
 	CurrentWeapon->Attack();
 	FTimerHandle AttackTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UWeaponComponent::StopAttack, 0, false, PlayerCharacter->MeleeAnimMontage->CalculateSequenceLength());
+	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UWeaponComponent::StopAttack, 0.01f, false, PlayerCharacter->MeleeAnimMontage->GetPlayLength());
+	UE_LOG(LogTemp, Warning, TEXT("%s"), bCanAttack ? TEXT("1") : TEXT("0"));
 }
 
 void UWeaponComponent::StopAttack()
 {
 	bCanAttack = false;
+	UE_LOG(LogTemp, Warning, TEXT("%s"), bCanAttack ? TEXT("1") : TEXT("0"));
 }
 
 
