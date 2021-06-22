@@ -5,6 +5,7 @@
 
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -98,17 +99,20 @@ void ABaseCharacter::OnDeath()
 	{
 		GetCharacterMovement()->DisableMovement();
 		GetController()->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	}		
-	DestroyCharacter();
-}
-
-void ABaseCharacter::DestroyCharacter()
-{
-	
+	}
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetWorld()->GetTimerManager().ClearTimer(DeSpawnWeaponTimerHandle);
 	GetMesh()->SetCollisionProfileName(FName("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
 	PrimaryActorTick.bCanEverTick = false;
-	//Destroy();
-	WeaponComponent->DeSpawnWeapon();
+
+	FTimerHandle DeathTimer;
+	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.f, false, 5.f);
+	//DestroyCharacter();
+}
+
+void ABaseCharacter::DestroyCharacter()
+{	
+	Destroy();
+	//WeaponComponent->DeSpawnWeapon();
 }
