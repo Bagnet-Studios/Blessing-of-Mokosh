@@ -59,7 +59,7 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
-	if(!CurrentWeapon)
+	if(!CurrentWeapon || PlayerCharacter->HealthComponent->IsDead())
 	{
 		return;
 	}
@@ -68,7 +68,7 @@ void UWeaponComponent::Attack()
 
 void UWeaponComponent::AttackRange()
 {
-	if(PlayerCharacter->ArrowCount <= 0)
+	if(PlayerCharacter->ArrowCount <= 0 || PlayerCharacter->HealthComponent->IsDead())
 	{
 		return;
 	}

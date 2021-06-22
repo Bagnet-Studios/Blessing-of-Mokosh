@@ -49,7 +49,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animations")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
 	UAnimMontage* DeathAnimMontage = nullptr;
 	
 	FTimerHandle DeSpawnWeaponTimerHandle;

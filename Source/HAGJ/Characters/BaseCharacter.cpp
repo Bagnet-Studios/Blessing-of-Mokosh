@@ -93,21 +93,22 @@ void ABaseCharacter::OnHealthChanged(float Health)
 }
 
 void ABaseCharacter::OnDeath()
-{
-	PlayAnimMontage(DeathAnimMontage);
-
+{	
 	if(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
 	{
-		GetCharacterMovement()->DisableMovement();	
-	}	
-	
-
-	GetWorld()->GetTimerManager().SetTimer(DeSpawnWeaponTimerHandle, this, &ABaseCharacter::DestroyCharacter, 1.f, false, 5.f);
+		GetCharacterMovement()->DisableMovement();
+		GetController()->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	}		
+	DestroyCharacter();
 }
 
 void ABaseCharacter::DestroyCharacter()
 {
+	
 	GetWorld()->GetTimerManager().ClearTimer(DeSpawnWeaponTimerHandle);
-	Destroy();
+	GetMesh()->SetCollisionProfileName(FName("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+	PrimaryActorTick.bCanEverTick = false;
+	//Destroy();
 	WeaponComponent->DeSpawnWeapon();
 }
