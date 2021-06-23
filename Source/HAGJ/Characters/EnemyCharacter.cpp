@@ -83,5 +83,6 @@ void AEnemyCharacter::OnDeath()
 {
 	Super::OnDeath();
 	AttackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	void AddMoney();
 }
 
