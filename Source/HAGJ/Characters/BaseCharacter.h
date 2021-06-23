@@ -57,12 +57,13 @@ protected:
 	USpringArmComponent* SpringArmComponent;
 	
 	FTimerHandle DeathTimer;
+
+	virtual void OnDeath();
 	
 private:	
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
 	void OnHealthChanged(float Health);
-	void OnDeath();
 	void DestroyCharacter();
 	
 };

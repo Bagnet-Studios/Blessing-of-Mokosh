@@ -9,7 +9,9 @@
 
 AEnemyCharacter::AEnemyCharacter()
 {
-
+	AttackCollision = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Collision"));
+	AttackCollision->SetupAttachment(GetRootComponent());
+	AttackCollision->SetSphereRadius(100.f);
 }
 
 void AEnemyCharacter::Tick(float DeltaTime)
@@ -75,5 +77,11 @@ void AEnemyCharacter::AttackRange()
 		ABaseProjectile* TempProjectile = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
 		TempProjectile->SetOwner(this);
 	}
+}
+
+void AEnemyCharacter::OnDeath()
+{
+	Super::OnDeath();
+	AttackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
