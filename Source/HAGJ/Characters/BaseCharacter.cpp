@@ -5,6 +5,7 @@
 
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -45,17 +46,17 @@ void ABaseCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-FVector ABaseCharacter::GetMovementDirection() const
+float ABaseCharacter::GetMovementDirection() const
 {
 	if(GetVelocity().IsZero())
 	{
-		return FVector::ZeroVector;
+		return 0.f;
 	}
 	const auto VelocityNormal = GetVelocity().GetSafeNormal();
 	const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
 	const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
 	const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
-	return CrossProduct;
+	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z);
 }
 
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -93,21 +94,25 @@ void ABaseCharacter::OnHealthChanged(float Health)
 }
 
 void ABaseCharacter::OnDeath()
-{
-	PlayAnimMontage(DeathAnimMontage);
-
+{	
 	if(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
 	{
-		GetCharacterMovement()->DisableMovement();	
-	}	
-	
+		GetCharacterMovement()->DisableMovement();
+		GetController()->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	}
+	GetMesh()->SetCollisionProfileName(FName("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	PrimaryActorTick.bCanEverTick = false;
 
-	GetWorld()->GetTimerManager().SetTimer(DeSpawnWeaponTimerHandle, this, &ABaseCharacter::DestroyCharacter, 1.f, false, 5.f);
+	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.01f, false, 3.f);
+	//DestroyCharacter();
+	
 }
 
 void ABaseCharacter::DestroyCharacter()
 {
-	GetWorld()->GetTimerManager().ClearTimer(DeSpawnWeaponTimerHandle);
 	Destroy();
 	WeaponComponent->DeSpawnWeapon();
+	GetWorld()->GetTimerManager().ClearTimer(DeathTimer);
 }

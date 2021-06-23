@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "Components/SphereComponent.h"
+
 #include "EnemyCharacter.generated.h"
 
 
@@ -14,6 +16,8 @@ class HAGJ_API AEnemyCharacter : public ABaseCharacter
 
 public:
 	AEnemyCharacter();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	USphereComponent* AttackCollision;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
@@ -29,10 +33,13 @@ protected:
 	void Tick(float DeltaTime);
 	void BeginPlay();
 	void RotateTurret(FVector LookAtTarget);
-	void HandleDestruction();
 	void CheckFireCondition();
 	float ReturnDistanceToPlayer();
 	void AttackRange();
+	virtual void OnDeath() override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddMoney();
 
 	ABaseCharacter* PlayerPawn = nullptr;
 	FTimerHandle FireRateTimerHandle;

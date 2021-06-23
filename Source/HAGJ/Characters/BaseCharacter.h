@@ -30,7 +30,7 @@ public:
 	class UDecalComponent* CursorToWorld;
 
 	UFUNCTION(BlueprintCallable)
-	FVector GetMovementDirection() const;
+	float GetMovementDirection() const;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* ProjectileSpawnPoint;
@@ -38,7 +38,14 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void RotateCharacterToCursor();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Currency")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
+	UAnimMontage* DeathAnimMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
+	UAnimMontage* MeleeAnimMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
+	UAnimMontage* RangeAnimMontage = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
 	int32 ArrowCount = 10;
 
 protected:
@@ -48,17 +55,15 @@ protected:
 	UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Animations")
-	UAnimMontage* DeathAnimMontage = nullptr;
 	
-	FTimerHandle DeSpawnWeaponTimerHandle;
+	FTimerHandle DeathTimer;
+
+	virtual void OnDeath();
 	
 private:	
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
 	void OnHealthChanged(float Health);
-	void OnDeath();
 	void DestroyCharacter();
 	
 };

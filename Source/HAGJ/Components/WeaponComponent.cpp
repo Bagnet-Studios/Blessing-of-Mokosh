@@ -59,20 +59,41 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
-	if(!CurrentWeapon)
+	if(!CurrentWeapon || PlayerCharacter->HealthComponent->IsDead() || bCanAttack == true)
 	{
 		return;
 	}
+	if(!PlayerCharacter->MeleeAnimMontage)
+	{
+		return;
+	}		
+	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
+	bCanAttack = true;
 	CurrentWeapon->Attack();
+	FTimerHandle AttackTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UWeaponComponent::StopAttack, 0.01f, false, PlayerCharacter->MeleeAnimMontage->GetPlayLength());
+	UE_LOG(LogTemp, Warning, TEXT("%s"), bCanAttack ? TEXT("1") : TEXT("0"));
 }
+
+void UWeaponComponent::StopAttack()
+{
+	bCanAttack = false;
+	UE_LOG(LogTemp, Warning, TEXT("%s"), bCanAttack ? TEXT("1") : TEXT("0"));
+}
+
 
 void UWeaponComponent::AttackRange()
 {
-	if(PlayerCharacter->ArrowCount <= 0)
+	if(PlayerCharacter->ArrowCount <= 0 || PlayerCharacter->HealthComponent->IsDead())
 	{
 		return;
 	}
-	
+	if(!PlayerCharacter->RangeAnimMontage)
+	{
+		return;
+	}	
+
+	PlayerCharacter->PlayAnimMontage(PlayerCharacter->RangeAnimMontage);
 	PlayerCharacter->RotateCharacterToCursor();
 	if(ProjectileClass)
 	{
