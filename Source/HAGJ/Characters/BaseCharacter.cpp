@@ -105,7 +105,7 @@ void ABaseCharacter::OnDeath()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	PrimaryActorTick.bCanEverTick = false;
 
-	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.01f, false, 10.f);
+	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.01f, false, 3.f);
 	//DestroyCharacter();
 	
 }
