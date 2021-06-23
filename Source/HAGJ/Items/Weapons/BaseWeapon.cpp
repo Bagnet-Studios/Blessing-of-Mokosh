@@ -42,7 +42,7 @@ void ABaseWeapon::OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 		return;
 	}
 	ABaseCharacter* DamagedActor = Cast<ABaseCharacter>(OtherActor);
-	UGameplayStatics::ApplyDamage(DamagedActor, Damage * DamageMultiplier, Character->GetInstigatorController(), this, DamageType);	
+	UGameplayStatics::ApplyDamage(DamagedActor, Damage * Character->WeaponComponent->DamageMultiplier, Character->GetInstigatorController(), this, DamageType);	
 }
 
 void ABaseWeapon::OnHolderDeath() const

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseProjectile.generated.h"
 
+class ABaseCharacter;
 class UProjectileMovementComponent;
 UCLASS()
 class HAGJ_API ABaseProjectile : public AActor
@@ -15,8 +16,9 @@ class HAGJ_API ABaseProjectile : public AActor
 public:	
 	ABaseProjectile();
 	
-	UPROPERTY(BlueprintReadOnly)
-    ABaseProjectile* CurrentProjectile = nullptr;
+	// UPROPERTY(BlueprintReadOnly)
+ //    ABaseProjectile* CurrentProjectile = nullptr;
+	ABaseCharacter* Character = nullptr;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -35,8 +37,8 @@ private:
 	float MovementSpeed = 1300.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (ClampMin = 0, DefaultMin = 0, AllowPrivateAccess = "true"))
 	float Damage = 50.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (ClampMin = 0, DefaultMin = 0, AllowPrivateAccess = "true"))
-	float DamageMultiplier = 1.0f;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (ClampMin = 0, DefaultMin = 0, AllowPrivateAccess = "true"))
+	// float DamageMultiplier = 1.0f;
 	
 	//Functions
 	UFUNCTION()
