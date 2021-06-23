@@ -38,6 +38,9 @@ protected:
 	void AttackRange();
 	virtual void OnDeath() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddMoney();
+
 	ABaseCharacter* PlayerPawn = nullptr;
 	FTimerHandle FireRateTimerHandle;
 };
