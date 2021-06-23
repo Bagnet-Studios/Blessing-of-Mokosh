@@ -18,14 +18,14 @@ ABaseProjectile::ABaseProjectile()
 	ProjectileMovement->InitialSpeed = MovementSpeed;
 	ProjectileMovement->MaxSpeed = MovementSpeed;
 	InitialLifeSpan = 3.f;
-
 }
 
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	ProjectileMesh->OnComponentHit.AddDynamic(this, &ABaseProjectile::OnHit);		
+	ProjectileMesh->OnComponentHit.AddDynamic(this, &ABaseProjectile::OnHit);
+	Character = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void ABaseProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -39,7 +39,7 @@ void ABaseProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	if(OtherActor && OtherActor != this && OtherActor != MyOwner)
 	{
 		ABaseCharacter* DamagedActor = Cast<ABaseCharacter>(OtherActor);
-		UGameplayStatics::ApplyDamage(DamagedActor, Damage * DamageMultiplier, MyOwner->GetInstigatorController(), this, DamageType);
+		UGameplayStatics::ApplyDamage(DamagedActor, Damage * Character->WeaponComponent->DamageMultiplier, MyOwner->GetInstigatorController(), this, DamageType);
 		Destroy();
 	}
 }

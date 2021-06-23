@@ -24,11 +24,14 @@ public:
 	void AttackRange();
 	void DeSpawnWeapon() const;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	ABaseWeapon* CurrentWeapon = nullptr;
-
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	ABaseProjectile* CurrentProjectile = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	float DamageMultiplier = 1.f;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Damage")
 	bool bCanAttack = false;
 
