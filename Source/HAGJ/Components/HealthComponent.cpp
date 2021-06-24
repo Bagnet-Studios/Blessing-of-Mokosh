@@ -53,8 +53,7 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 		{
 			Character->LivingWater--;
 			Health = MaxHealth;
-		}
-		
+		}		
 	}
 }
 
