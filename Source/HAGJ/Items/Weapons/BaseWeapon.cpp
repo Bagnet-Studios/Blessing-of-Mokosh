@@ -2,7 +2,6 @@
 
 
 #include "BaseWeapon.h"
-
 #include "HAGJ/Characters/BaseCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -42,6 +41,7 @@ void ABaseWeapon::OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 		return;
 	}
 	ABaseCharacter* DamagedActor = Cast<ABaseCharacter>(OtherActor);
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), Character->AttackSoundWave, Character->GetActorLocation());
 	UGameplayStatics::ApplyDamage(DamagedActor, Damage * Character->WeaponComponent->DamageMultiplier, Character->GetInstigatorController(), this, DamageType);	
 }
 
