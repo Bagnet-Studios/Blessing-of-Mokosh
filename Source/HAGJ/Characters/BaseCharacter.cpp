@@ -44,6 +44,7 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), WeaponComponent->bCanAttack ? TEXT("1") : TEXT("0"));
 }
 
 float ABaseCharacter::GetMovementDirection() const

@@ -46,9 +46,6 @@ protected:
 	TSubclassOf<ABaseProjectile> ProjectileClass;	
 	
 private:
-	UFUNCTION()
-	void StopAttack();
-	
 	void SpawnWeapon();
 
 private:

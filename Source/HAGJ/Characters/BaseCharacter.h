@@ -35,6 +35,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* ProjectileSpawnPoint;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
+	USoundBase* ReviveSound = nullptr;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void RotateCharacterToCursor();
 
@@ -44,9 +47,15 @@ public:
 	UAnimMontage* MeleeAnimMontage = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
 	UAnimMontage* RangeAnimMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
+	USoundBase* AttackSoundWave = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
 	int32 ArrowCount = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
+	int32 LivingWater = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
+	int32 Pie = 0.f;
 
 protected:
 	virtual void BeginPlay() override;

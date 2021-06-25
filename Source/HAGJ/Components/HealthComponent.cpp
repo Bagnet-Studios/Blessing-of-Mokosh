@@ -3,6 +3,9 @@
 
 #include "HealthComponent.h"
 
+#include "HAGJ/Characters/BaseCharacter.h"
+#include "Kismet/GameplayStatics.h"
+
 UHealthComponent::UHealthComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -41,7 +44,17 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 
 	if(IsDead()) 
 	{
-		OnDeath.Broadcast();
+		ABaseCharacter* Character = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if(Character->LivingWater == 0.f)
+		{
+			OnDeath.Broadcast();	
+		}
+		else
+		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), Character->ReviveSound,  Character->GetActorLocation());
+			Character->LivingWater--;
+			Health = MaxHealth;
+		}		
 	}
 }
 
