@@ -35,6 +35,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* ProjectileSpawnPoint;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
+	USoundBase* ReviveSound = nullptr;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void RotateCharacterToCursor();
 

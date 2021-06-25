@@ -51,6 +51,7 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 		}
 		else
 		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), Character->ReviveSound,  Character->GetActorLocation());
 			Character->LivingWater--;
 			Health = MaxHealth;
 		}		
