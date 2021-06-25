@@ -68,18 +68,17 @@ void UWeaponComponent::Attack()
 		return;
 	}		
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
-	bCanAttack = true;
-	CurrentWeapon->Attack();
-	FTimerHandle AttackTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UWeaponComponent::StopAttack, 0.01f, false, PlayerCharacter->MeleeAnimMontage->GetPlayLength());
-	UE_LOG(LogTemp, Warning, TEXT("%s"), bCanAttack ? TEXT("1") : TEXT("0"));
+	//bCanAttack = true;
+	//CurrentWeapon->Attack();
+	// FTimerHandle AttackTimerHandle;
+	// GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UWeaponComponent::StopAttack, 0.01f, false, PlayerCharacter->MeleeAnimMontage->GetPlayLength());
 }
 
-void UWeaponComponent::StopAttack()
-{
-	bCanAttack = false;
-	UE_LOG(LogTemp, Warning, TEXT("%s"), bCanAttack ? TEXT("1") : TEXT("0"));
-}
+// void UWeaponComponent::StopAttack()
+// {
+// 	bCanAttack = false;
+// 	UE_LOG(LogTemp, Warning, TEXT("%s"), bCanAttack ? TEXT("1") : TEXT("0"));
+// }
 
 
 void UWeaponComponent::AttackRange()
