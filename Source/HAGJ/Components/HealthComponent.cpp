@@ -41,20 +41,27 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 	}
 
 	SetHealth(Health - Damage);
-
+	
 	if(IsDead()) 
 	{
 		ABaseCharacter* Character = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		if(Character->LivingWater == 0.f)
+		if(DamagedActor == Character)
 		{
-			OnDeath.Broadcast();	
+			if(Character->LivingWater == 0.f)
+			{
+				OnDeath.Broadcast();	
+			}
+			else
+			{
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), Character->ReviveSound,  Character->GetActorLocation());
+				Character->LivingWater--;
+				Health = MaxHealth;
+			}
 		}
-		else
+		else if(DamagedActor != Character)
 		{
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), Character->ReviveSound,  Character->GetActorLocation());
-			Character->LivingWater--;
-			Health = MaxHealth;
-		}		
+			OnDeath.Broadcast();
+		}
 	}
 }
 
