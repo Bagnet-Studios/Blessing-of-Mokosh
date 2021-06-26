@@ -98,6 +98,7 @@ void UWeaponComponent::AttackRange()
 		CurrentProjectile = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
 		CurrentProjectile->SetOwner(PlayerCharacter);
 		PlayerCharacter->ArrowCount--;
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PlayerCharacter->BowSound, PlayerCharacter->GetActorLocation());
 	}
 }
 
