@@ -22,7 +22,7 @@ void AEnemyCharacter::Tick(float DeltaTime)
 	{
 		return;
 	}
-	RotateTurret(PlayerPawn->GetActorLocation());
+	//RotateTurret(PlayerPawn->GetActorLocation());
 }
 
 void AEnemyCharacter::BeginPlay()
