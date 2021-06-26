@@ -91,7 +91,7 @@ void ABaseCharacter::MoveRight(float Amount)
 
 void ABaseCharacter::OnHealthChanged(float Health)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Character %s Health: %f"), *GetOwner()->GetName(), HealthComponent->GetHealth());
+	//UE_LOG(LogTemp, Warning, TEXT("Character %s Health: %f"), *GetOwner()->GetName(), HealthComponent->GetHealth());
 }
 
 void ABaseCharacter::OnDeath()
