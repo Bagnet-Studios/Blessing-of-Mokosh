@@ -16,8 +16,6 @@ class HAGJ_API ABaseProjectile : public AActor
 public:	
 	ABaseProjectile();
 	
-	// UPROPERTY(BlueprintReadOnly)
- //    ABaseProjectile* CurrentProjectile = nullptr;
 	ABaseCharacter* Character = nullptr;
 	
 protected:
