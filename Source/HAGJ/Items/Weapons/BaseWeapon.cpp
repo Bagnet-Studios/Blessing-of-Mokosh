@@ -43,7 +43,7 @@ void ABaseWeapon::OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 	ABaseCharacter* DamagedActor = Cast<ABaseCharacter>(OtherActor);
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), Character->AttackSoundWave, Character->GetActorLocation());
 	UGameplayStatics::ApplyDamage(DamagedActor, Damage * Character->WeaponComponent->DamageMultiplier, Character->GetInstigatorController(), this, DamageType);
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("%s"), *DamagedActor->GetName()));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("%s"), *DamagedActor->GetName()));
 }
 
 void ABaseWeapon::OnHolderDeath()
