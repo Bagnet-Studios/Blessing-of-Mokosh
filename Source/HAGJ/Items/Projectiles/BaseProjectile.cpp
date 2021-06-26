@@ -12,7 +12,8 @@ ABaseProjectile::ABaseProjectile()
 	PrimaryActorTick.bCanEverTick = false;
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projectile Mesh"));
-	RootComponent = ProjectileMesh;
+	ProjectileMesh->SetupAttachment(GetRootComponent());
+	//RootComponent = ProjectileMesh;
 	
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 	ProjectileMovement->InitialSpeed = MovementSpeed;
