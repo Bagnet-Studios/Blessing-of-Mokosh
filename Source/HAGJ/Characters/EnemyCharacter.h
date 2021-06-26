@@ -32,6 +32,7 @@ protected:
 
 	void Tick(float DeltaTime);
 	void BeginPlay();
+	UFUNCTION(BlueprintCallable)
 	void RotateTurret(FVector LookAtTarget);
 	void CheckFireCondition();
 	float ReturnDistanceToPlayer();
