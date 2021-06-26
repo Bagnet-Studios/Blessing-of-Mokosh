@@ -47,6 +47,27 @@ void UWeaponComponent::SpawnWeapon()
 	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, "WeaponSocket");
 }
 
+void UWeaponComponent::SpawnRangedWeapon()
+{
+	if(!GetWorld())
+	{
+		return;
+	}		
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if(!Character)
+	{
+		return;
+	}
+	RangedCurrentWeapon = GetWorld()->SpawnActor<ABaseWeapon>(RangedWeaponClass);
+	if(!RangedCurrentWeapon)
+	{
+		return;
+	}
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+	RangedCurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, "RangedWeaponSocket");
+}
+
+
 void UWeaponComponent::DeSpawnWeapon() const
 {
 	if(!GetWorld())
@@ -80,7 +101,7 @@ void UWeaponComponent::CanAttack()
 
 void UWeaponComponent::AttackRange()
 {
-	if(PlayerCharacter->ArrowCount <= 0 || PlayerCharacter->HealthComponent->IsDead())
+	if(PlayerCharacter->ArrowCount <= 0 || PlayerCharacter->HealthComponent->IsDead() || bInputAttack == false)
 	{
 		return;
 	}
@@ -90,7 +111,8 @@ void UWeaponComponent::AttackRange()
 	}	
 
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->RangeAnimMontage);
-	PlayerCharacter->RotateCharacterToCursor();
+	bInputAttack = false;
+	//PlayerCharacter->RotateCharacterToCursor();
 	if(ProjectileClass)
 	{
 		FVector SpawnLocation = PlayerCharacter->ProjectileSpawnPoint->GetComponentLocation();
@@ -100,6 +122,7 @@ void UWeaponComponent::AttackRange()
 		PlayerCharacter->ArrowCount--;
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), PlayerCharacter->BowSound, PlayerCharacter->GetActorLocation());
 	}
+	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.f);
 }
 
 

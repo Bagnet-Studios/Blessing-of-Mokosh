@@ -24,10 +24,14 @@ public:
 	void AttackRange();
 	UFUNCTION(BlueprintCallable)
 	void SpawnWeapon();
+	UFUNCTION(BlueprintCallable)
+	void SpawnRangedWeapon();
 	void DeSpawnWeapon() const;
 
 	UPROPERTY(BlueprintReadWrite)
 	ABaseWeapon* CurrentWeapon = nullptr;
+	UPROPERTY(BlueprintReadWrite)
+	ABaseWeapon* RangedCurrentWeapon = nullptr;
 	UPROPERTY(BlueprintReadWrite)
 	ABaseProjectile* CurrentProjectile = nullptr;
 
@@ -49,6 +53,11 @@ protected:
 	TSubclassOf<ABaseWeapon> WeaponClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	FName WeaponAttackSocketName = "WeaponSocket";
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<ABaseWeapon> RangedWeaponClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	FName RangedWeaponAttackSocketName = "RangedWeaponSocket";
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Projectile")
 	TSubclassOf<ABaseProjectile> ProjectileClass;	
 	
