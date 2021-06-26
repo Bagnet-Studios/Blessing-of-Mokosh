@@ -22,6 +22,8 @@ public:
 	void Attack();
 	UFUNCTION(BlueprintCallable)
 	void AttackRange();
+	UFUNCTION(BlueprintCallable)
+	void SpawnWeapon();
 	void DeSpawnWeapon() const;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -45,9 +47,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon | Projectile")
 	TSubclassOf<ABaseProjectile> ProjectileClass;	
 	
-private:
-	void SpawnWeapon();
-
 private:
 	ABaseCharacter* PlayerCharacter;
 };
