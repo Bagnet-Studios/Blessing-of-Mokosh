@@ -36,6 +36,11 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Damage")
 	bool bCanAttack = false;
+	
+	FTimerHandle AttackAnimTimer;
+	UFUNCTION()
+	void CanAttack();
+	bool bInputAttack = true;
 
 protected:
 	virtual void BeginPlay() override;

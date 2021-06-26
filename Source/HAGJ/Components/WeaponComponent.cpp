@@ -60,15 +60,22 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
-	if(!CurrentWeapon || PlayerCharacter->HealthComponent->IsDead() || bCanAttack == true)
+	if(!CurrentWeapon || PlayerCharacter->HealthComponent->IsDead() || bCanAttack == true || bInputAttack == false)
 	{
 		return;
 	}
 	if(!PlayerCharacter->MeleeAnimMontage)
 	{
 		return;
-	}		
+	}
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
+	bInputAttack = false;
+	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.2f);
+}
+
+void UWeaponComponent::CanAttack()
+{
+	bInputAttack = true;
 }
 
 void UWeaponComponent::AttackRange()
