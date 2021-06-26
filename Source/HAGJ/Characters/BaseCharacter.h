@@ -38,6 +38,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
 	USoundBase* ReviveSound = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
+	USoundBase* BowSound = nullptr;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void RotateCharacterToCursor();
 
