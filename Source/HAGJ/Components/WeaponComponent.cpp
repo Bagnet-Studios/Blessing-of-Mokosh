@@ -109,7 +109,12 @@ void UWeaponComponent::AttackRange()
 	{
 		return;
 	}	
+	if(!PlayerCharacter->bCanShoot)
+	{
+		return;
+	}
 
+	
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->RangeAnimMontage);
 	bInputAttack = false;
 	//PlayerCharacter->RotateCharacterToCursor();
