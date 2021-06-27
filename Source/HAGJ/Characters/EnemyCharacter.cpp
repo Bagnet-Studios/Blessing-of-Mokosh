@@ -29,6 +29,8 @@ void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	WeaponComponent->SpawnWeapon();
+
 	if(bIsRanged)
 	{
 		GetWorld()->GetTimerManager().SetTimer(
@@ -82,6 +84,10 @@ void AEnemyCharacter::AttackRange()
 void AEnemyCharacter::OnDeath()
 {
 	Super::OnDeath();
+	if(bIsRanged)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(FireRateTimerHandle);	
+	}
 	AttackCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AddMoney();
 }

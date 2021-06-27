@@ -21,7 +21,7 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	SpawnWeapon();
+	//SpawnWeapon();
 
 	PlayerCharacter = Cast<ABaseCharacter>(GetOwner());
 	//Character = Cast<ABaseCharacter>(GetOwner());
