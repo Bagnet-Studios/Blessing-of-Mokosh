@@ -67,6 +67,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	float BaseTurnRate;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* CameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -79,6 +83,8 @@ protected:
 private:	
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
+	void Turn(float Value);
+	void TurnRate(float Value);
 	void OnHealthChanged(float Health);
 	void DestroyCharacter();
 	

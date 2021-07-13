@@ -21,6 +21,7 @@ ABaseCharacter::ABaseCharacter()
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->SetUsingAbsoluteRotation(true);
+	SpringArmComponent->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->bUsePawnControlRotation = false;
@@ -29,6 +30,16 @@ ABaseCharacter::ABaseCharacter()
 	
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
+
+	// set our turn rates for input
+	BaseTurnRate = 45.f;
+	// Don't rotate when the controller rotates. Let that just affect the camera.
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+	// Configure character movement
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 }
 
 void ABaseCharacter::BeginPlay()
@@ -73,20 +84,31 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ABaseCharacter::MoveForward(float Amount)
 {
-	if (Amount == 0.f)
+	if ((Controller != nullptr) && (Amount != 0.0f))
 	{
-		return;
+		// find out which way is forward
+		const FRotator Rotation = CameraComponent->GetComponentRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Amount);
 	}
-	AddMovementInput(CameraComponent->GetForwardVector(), Amount);
 }
 
 void ABaseCharacter::MoveRight(float Amount)
 {
-	if (Amount == 0.f)
+	if ( (Controller != nullptr) && (Amount != 0.0f) )
 	{
-		return;
+		// find out which way is right
+		const FRotator Rotation = CameraComponent->GetComponentRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+	
+		// get right vector 
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		// add movement in that direction
+		AddMovementInput(Direction, Amount);
 	}
-	AddMovementInput(CameraComponent->GetRightVector(), Amount);
 }
 
 void ABaseCharacter::OnHealthChanged(float Health)
@@ -106,9 +128,7 @@ void ABaseCharacter::OnDeath()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	PrimaryActorTick.bCanEverTick = false;
 
-	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.01f, false, 3.f);
-	//DestroyCharacter();
-	
+	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.01f, false, 3.f);	
 }
 
 void ABaseCharacter::DestroyCharacter()
