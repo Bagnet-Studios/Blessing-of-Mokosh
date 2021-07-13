@@ -6,6 +6,7 @@
 #include "BehaviorTree/BehaviorTreeTypes.h"
 #include "Components/DecalComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/GameSession.h"
 #include "HAGJ/Characters/BaseCharacter.h"
 #include "HAGJ/GameModes/BaseGameMode.h"
 #include "HAGJ/Items/Projectiles/BaseProjectile.h"
@@ -24,7 +25,6 @@ void UWeaponComponent::BeginPlay()
 	//SpawnWeapon();
 
 	PlayerCharacter = Cast<ABaseCharacter>(GetOwner());
-	//Character = Cast<ABaseCharacter>(GetOwner());
 }
 
 void UWeaponComponent::SpawnWeapon()
@@ -89,6 +89,13 @@ void UWeaponComponent::Attack()
 	{
 		return;
 	}
+	
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	FHitResult HitResult;
+	PlayerController->GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+	FRotator PlayerRotation = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetActorLocation(), HitResult.ImpactPoint);
+	PlayerCharacter->SetActorRotation(FRotator(0.f, PlayerRotation.Yaw, 0.f));
+	
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
 	bInputAttack = false;
 	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.2f);
