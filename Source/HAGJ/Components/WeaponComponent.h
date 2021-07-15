@@ -22,7 +22,9 @@ public:
 	void Attack();
 	UFUNCTION(BlueprintCallable)
 	void AttackRange();
+	UFUNCTION(BlueprintCallable)
 	void RotateCharacterToCursor();
+	
 	UFUNCTION(BlueprintCallable)
 	void SpawnWeapon();
 	UFUNCTION(BlueprintCallable)
