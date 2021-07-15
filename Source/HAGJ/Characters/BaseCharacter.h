@@ -29,8 +29,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UDecalComponent* CursorToWorld;
 
-	UFUNCTION(BlueprintCallable)
-	float GetMovementDirection() const;
+	// UFUNCTION(BlueprintCallable)
+	// float GetMovementDirection() const;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* ProjectileSpawnPoint;
@@ -81,8 +81,6 @@ protected:
 	bool bIsAttacking = false;	
 	
 private:
-	void MoveForward(float Amount);
-	void MoveRight(float Amount);
 	void OnHealthChanged(float Health);
 	void DestroyCharacter();
 };

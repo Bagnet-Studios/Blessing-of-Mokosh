@@ -1,14 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WeaponComponent.h"
-
 #include "BehaviorTree/BehaviorTreeTypes.h"
 #include "Components/DecalComponent.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/GameSession.h"
 #include "HAGJ/Characters/BaseCharacter.h"
-#include "HAGJ/GameModes/BaseGameMode.h"
 #include "HAGJ/Items/Projectiles/BaseProjectile.h"
 #include "HAGJ/Items/Weapons/BaseWeapon.h"
 #include "Kismet/GameplayStatics.h"
@@ -22,7 +16,6 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	//SpawnWeapon();
 
 	PlayerCharacter = Cast<ABaseCharacter>(GetOwner());
 }
@@ -81,23 +74,21 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
-	if(!CurrentWeapon || PlayerCharacter->HealthComponent->IsDead() || bCanAttack == true || bInputAttack == false)
+	if(!CurrentWeapon
+		|| PlayerCharacter->HealthComponent->IsDead()
+		|| bInputAttack == false
+		|| !PlayerCharacter->MeleeAnimMontage)
 	{
 		return;
 	}
-	if(!PlayerCharacter->MeleeAnimMontage)
-	{
-		return;
-	}
-	
+
 	bInputAttack = false;
 	PlayerCharacter->SetIsAttacking(true);
 	
 	RotateCharacterToCursor();
 	
-	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
-
-	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.2f);
+	float MeleeAttackAnimationDuration = PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
+	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, MeleeAttackAnimationDuration);
 }
 
 void UWeaponComponent::CanAttack()
@@ -108,15 +99,11 @@ void UWeaponComponent::CanAttack()
 
 void UWeaponComponent::AttackRange()
 {
-	if(PlayerCharacter->ArrowCount <= 0 || PlayerCharacter->HealthComponent->IsDead() || bInputAttack == false)
-	{
-		return;
-	}
-	if(!PlayerCharacter->RangeAnimMontage)
-	{
-		return;
-	}	
-	if(!PlayerCharacter->bCanShoot)
+	if(PlayerCharacter->ArrowCount <= 0
+		|| PlayerCharacter->HealthComponent->IsDead()
+		|| bInputAttack == false
+		|| !PlayerCharacter->RangeAnimMontage
+		|| !PlayerCharacter->bCanShoot)
 	{
 		return;
 	}
@@ -125,6 +112,7 @@ void UWeaponComponent::AttackRange()
 	bInputAttack = false;
 	
 	RotateCharacterToCursor();
+	
 	if(ProjectileClass)
 	{
 		FVector SpawnLocation = PlayerCharacter->ProjectileSpawnPoint->GetComponentLocation();

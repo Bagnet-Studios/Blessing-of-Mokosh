@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "HAGJ/Characters/BaseCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -32,6 +29,7 @@ ABaseCharacter::ABaseCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+	
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
@@ -51,19 +49,6 @@ void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), bIsAttacking ? TEXT("1") : TEXT("0"));
-}
-
-float ABaseCharacter::GetMovementDirection() const
-{
-	if(GetVelocity().IsZero())
-	{
-		return 0.f;
-	}
-	const auto VelocityNormal = GetVelocity().GetSafeNormal();
-	const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
-	const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
-	const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
-	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z);
 }
 
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -106,3 +91,16 @@ void ABaseCharacter::DestroyCharacter()
 	WeaponComponent->DeSpawnWeapon();
 	GetWorld()->GetTimerManager().ClearTimer(DeathTimer);
 }
+
+// float ABaseCharacter::GetMovementDirection() const
+// {
+// 	if(GetVelocity().IsZero())
+// 	{
+// 		return 0.f;
+// 	}
+// 	const auto VelocityNormal = GetVelocity().GetSafeNormal();
+// 	const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
+// 	const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
+// 	const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
+// 	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z);
+// }
