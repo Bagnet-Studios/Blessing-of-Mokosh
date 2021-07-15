@@ -93,23 +93,17 @@ void UWeaponComponent::Attack()
 	bInputAttack = false;
 	PlayerCharacter->SetIsAttacking(true);
 	
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	FHitResult HitResult;
-	PlayerController->GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
-	FRotator PlayerRotation = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetActorLocation(), HitResult.ImpactPoint);
-	PlayerCharacter->SetActorRotation(FRotator(0.f, PlayerRotation.Yaw, 0.f));
+	RotateCharacterToCursor();
 	
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
 
 	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.2f);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), bInputAttack ? TEXT("1") : TEXT("0"));
 }
 
 void UWeaponComponent::CanAttack()
 {
 	bInputAttack = true;
 	PlayerCharacter->SetIsAttacking(false);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), bInputAttack ? TEXT("1") : TEXT("0"));
 }
 
 void UWeaponComponent::AttackRange()
@@ -126,11 +120,11 @@ void UWeaponComponent::AttackRange()
 	{
 		return;
 	}
-
 	
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->RangeAnimMontage);
 	bInputAttack = false;
-	//PlayerCharacter->RotateCharacterToCursor();
+	
+	RotateCharacterToCursor();
 	if(ProjectileClass)
 	{
 		FVector SpawnLocation = PlayerCharacter->ProjectileSpawnPoint->GetComponentLocation();
@@ -143,4 +137,11 @@ void UWeaponComponent::AttackRange()
 	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.f);
 }
 
-
+void UWeaponComponent::RotateCharacterToCursor()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	FHitResult HitResult;
+	PlayerController->GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+	FRotator PlayerRotation = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetActorLocation(), HitResult.ImpactPoint);
+	PlayerCharacter->SetActorRotation(FRotator(0.f, PlayerRotation.Yaw, 0.f));
+}
