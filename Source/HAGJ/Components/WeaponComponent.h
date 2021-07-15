@@ -1,13 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "HAGJ/Items/Weapons/BaseWeapon.h"
-
 #include "WeaponComponent.generated.h"
-
 
 class ABaseProjectile;
 class ABaseCharacter;
@@ -23,6 +19,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AttackRange();
 	UFUNCTION(BlueprintCallable)
+	void RotateCharacterToCursor();
+	
+	UFUNCTION(BlueprintCallable)
 	void SpawnWeapon();
 	UFUNCTION(BlueprintCallable)
 	void SpawnRangedWeapon();
@@ -37,13 +36,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float DamageMultiplier = 1.f;
-	
+
+	//Allow make damage
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Damage")
 	bool bCanAttack = false;
 	
 	FTimerHandle AttackAnimTimer;
 	UFUNCTION()
 	void CanAttack();
+	//Allow make attack/attack animation
 	bool bInputAttack = true;
 
 protected:

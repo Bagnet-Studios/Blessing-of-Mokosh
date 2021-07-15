@@ -1,9 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include <HAGJ/Characters/BaseCharacter.h>
-
-#include "HeadMountedDisplayFunctionLibrary.h"
+#include "HAGJ/Characters/BaseCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
@@ -11,7 +6,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "HAGJ/Components/WeaponComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -21,6 +15,7 @@ ABaseCharacter::ABaseCharacter()
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->SetUsingAbsoluteRotation(true);
+	SpringArmComponent->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->bUsePawnControlRotation = false;
@@ -29,6 +24,15 @@ ABaseCharacter::ABaseCharacter()
 	
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
+
+	// Don't rotate when the controller rotates. Let that just affect the camera.
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+	
+	// Configure character movement
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 }
 
 void ABaseCharacter::BeginPlay()
@@ -44,20 +48,7 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), WeaponComponent->bCanAttack ? TEXT("1") : TEXT("0"));
-}
-
-float ABaseCharacter::GetMovementDirection() const
-{
-	if(GetVelocity().IsZero())
-	{
-		return 0.f;
-	}
-	const auto VelocityNormal = GetVelocity().GetSafeNormal();
-	const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
-	const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
-	const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
-	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z);
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), bIsAttacking ? TEXT("1") : TEXT("0"));
 }
 
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -65,28 +56,13 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &ABaseCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, WeaponComponent, &UWeaponComponent::Attack);
 	PlayerInputComponent->BindAction("AttackRange", IE_Pressed, WeaponComponent, &UWeaponComponent::AttackRange);
 }
 
-void ABaseCharacter::MoveForward(float Amount)
+void ABaseCharacter::SetIsAttacking(bool IsAttacking)
 {
-	if (Amount == 0.f)
-	{
-		return;
-	}
-	AddMovementInput(CameraComponent->GetForwardVector(), Amount);
-}
-
-void ABaseCharacter::MoveRight(float Amount)
-{
-	if (Amount == 0.f)
-	{
-		return;
-	}
-	AddMovementInput(CameraComponent->GetRightVector(), Amount);
+	bIsAttacking = IsAttacking;
 }
 
 void ABaseCharacter::OnHealthChanged(float Health)
@@ -106,9 +82,7 @@ void ABaseCharacter::OnDeath()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	PrimaryActorTick.bCanEverTick = false;
 
-	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.01f, false, 3.f);
-	//DestroyCharacter();
-	
+	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &ABaseCharacter::DestroyCharacter, 0.01f, false, 3.f);	
 }
 
 void ABaseCharacter::DestroyCharacter()
@@ -117,3 +91,16 @@ void ABaseCharacter::DestroyCharacter()
 	WeaponComponent->DeSpawnWeapon();
 	GetWorld()->GetTimerManager().ClearTimer(DeathTimer);
 }
+
+// float ABaseCharacter::GetMovementDirection() const
+// {
+// 	if(GetVelocity().IsZero())
+// 	{
+// 		return 0.f;
+// 	}
+// 	const auto VelocityNormal = GetVelocity().GetSafeNormal();
+// 	const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
+// 	const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
+// 	const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
+// 	return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z);
+// }

@@ -29,8 +29,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UDecalComponent* CursorToWorld;
 
-	UFUNCTION(BlueprintCallable)
-	float GetMovementDirection() const;
+	// UFUNCTION(BlueprintCallable)
+	// float GetMovementDirection() const;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* ProjectileSpawnPoint;
@@ -53,8 +53,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
 	USoundBase* AttackSoundWave = nullptr;
 
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCanShoot = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
@@ -63,6 +61,8 @@ public:
 	int32 LivingWater = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
 	int32 Pie = 0.f;
+
+	void SetIsAttacking(bool IsAttacking);
 
 protected:
 	virtual void BeginPlay() override;
@@ -76,12 +76,11 @@ protected:
 
 	virtual void OnDeath();
 	
-private:	
-	void MoveForward(float Amount);
-	void MoveRight(float Amount);
+	//true = player is attacking and can't move
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsAttacking = false;	
+	
+private:
 	void OnHealthChanged(float Health);
 	void DestroyCharacter();
-	
 };
-
-

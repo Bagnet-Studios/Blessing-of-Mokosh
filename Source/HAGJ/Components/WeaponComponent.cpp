@@ -1,13 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WeaponComponent.h"
-
 #include "BehaviorTree/BehaviorTreeTypes.h"
 #include "Components/DecalComponent.h"
 #include "GameFramework/Character.h"
 #include "HAGJ/Characters/BaseCharacter.h"
-#include "HAGJ/GameModes/BaseGameMode.h"
 #include "HAGJ/Items/Projectiles/BaseProjectile.h"
 #include "HAGJ/Items/Weapons/BaseWeapon.h"
 #include "Kismet/GameplayStatics.h"
@@ -21,10 +16,8 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	//SpawnWeapon();
 
 	PlayerCharacter = Cast<ABaseCharacter>(GetOwner());
-	//Character = Cast<ABaseCharacter>(GetOwner());
 }
 
 void UWeaponComponent::SpawnWeapon()
@@ -81,43 +74,45 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
-	if(!CurrentWeapon || PlayerCharacter->HealthComponent->IsDead() || bCanAttack == true || bInputAttack == false)
+	if(!CurrentWeapon
+		|| PlayerCharacter->HealthComponent->IsDead()
+		|| bInputAttack == false
+		|| !PlayerCharacter->MeleeAnimMontage)
 	{
 		return;
 	}
-	if(!PlayerCharacter->MeleeAnimMontage)
-	{
-		return;
-	}
-	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
+
 	bInputAttack = false;
-	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.2f);
+	PlayerCharacter->SetIsAttacking(true);
+	
+	RotateCharacterToCursor();
+	
+	float MeleeAttackAnimationDuration = PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
+	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, MeleeAttackAnimationDuration);
 }
 
 void UWeaponComponent::CanAttack()
 {
 	bInputAttack = true;
+	PlayerCharacter->SetIsAttacking(false);
 }
 
 void UWeaponComponent::AttackRange()
 {
-	if(PlayerCharacter->ArrowCount <= 0 || PlayerCharacter->HealthComponent->IsDead() || bInputAttack == false)
+	if(PlayerCharacter->ArrowCount <= 0
+		|| PlayerCharacter->HealthComponent->IsDead()
+		|| bInputAttack == false
+		|| !PlayerCharacter->RangeAnimMontage
+		|| !PlayerCharacter->bCanShoot)
 	{
 		return;
 	}
-	if(!PlayerCharacter->RangeAnimMontage)
-	{
-		return;
-	}	
-	if(!PlayerCharacter->bCanShoot)
-	{
-		return;
-	}
-
 	
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->RangeAnimMontage);
 	bInputAttack = false;
-	//PlayerCharacter->RotateCharacterToCursor();
+	
+	RotateCharacterToCursor();
+	
 	if(ProjectileClass)
 	{
 		FVector SpawnLocation = PlayerCharacter->ProjectileSpawnPoint->GetComponentLocation();
@@ -130,4 +125,11 @@ void UWeaponComponent::AttackRange()
 	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.f);
 }
 
-
+void UWeaponComponent::RotateCharacterToCursor()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	FHitResult HitResult;
+	PlayerController->GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+	FRotator PlayerRotation = UKismetMathLibrary::FindLookAtRotation(PlayerCharacter->GetActorLocation(), HitResult.ImpactPoint);
+	PlayerCharacter->SetActorRotation(FRotator(0.f, PlayerRotation.Yaw, 0.f));
+}
