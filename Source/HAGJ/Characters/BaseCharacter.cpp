@@ -1,9 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include <HAGJ/Characters/BaseCharacter.h>
-
-#include "HeadMountedDisplayFunctionLibrary.h"
+#include "HAGJ/Characters/BaseCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/DecalComponent.h"
@@ -11,7 +9,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "HAGJ/Components/WeaponComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -31,8 +28,6 @@ ABaseCharacter::ABaseCharacter()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 
-	// set our turn rates for input
-	BaseTurnRate = 45.f;
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -55,7 +50,7 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), WeaponComponent->bCanAttack ? TEXT("1") : TEXT("0"));
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), bIsAttacking ? TEXT("1") : TEXT("0"));
 }
 
 float ABaseCharacter::GetMovementDirection() const
@@ -76,39 +71,13 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &ABaseCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, WeaponComponent, &UWeaponComponent::Attack);
 	PlayerInputComponent->BindAction("AttackRange", IE_Pressed, WeaponComponent, &UWeaponComponent::AttackRange);
 }
 
-void ABaseCharacter::MoveForward(float Amount)
+void ABaseCharacter::SetIsAttacking(bool IsAttacking)
 {
-	if ((Controller != nullptr) && (Amount != 0.0f))
-	{
-		// find out which way is forward
-		const FRotator Rotation = CameraComponent->GetComponentRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Amount);
-	}
-}
-
-void ABaseCharacter::MoveRight(float Amount)
-{
-	if ( (Controller != nullptr) && (Amount != 0.0f) )
-	{
-		// find out which way is right
-		const FRotator Rotation = CameraComponent->GetComponentRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Amount);
-	}
+	bIsAttacking = IsAttacking;
 }
 
 void ABaseCharacter::OnHealthChanged(float Health)

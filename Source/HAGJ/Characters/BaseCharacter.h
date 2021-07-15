@@ -53,8 +53,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
 	USoundBase* AttackSoundWave = nullptr;
 
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCanShoot = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
@@ -64,12 +62,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
 	int32 Pie = 0.f;
 
+	void SetIsAttacking(bool IsAttacking);
+
 protected:
 	virtual void BeginPlay() override;
-
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* CameraComponent;
@@ -80,14 +76,13 @@ protected:
 
 	virtual void OnDeath();
 	
-private:	
+	//true = player is attacking and can't move
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsAttacking = false;	
+	
+private:
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
-	void Turn(float Value);
-	void TurnRate(float Value);
 	void OnHealthChanged(float Health);
 	void DestroyCharacter();
-	
 };
-
-

@@ -37,13 +37,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float DamageMultiplier = 1.f;
-	
+
+	//Allow make damage
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Damage")
 	bool bCanAttack = false;
 	
 	FTimerHandle AttackAnimTimer;
 	UFUNCTION()
 	void CanAttack();
+	//Allow make attack/attack animation
 	bool bInputAttack = true;
 
 protected:

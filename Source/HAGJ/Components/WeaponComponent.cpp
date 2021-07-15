@@ -90,6 +90,9 @@ void UWeaponComponent::Attack()
 		return;
 	}
 	
+	bInputAttack = false;
+	PlayerCharacter->SetIsAttacking(true);
+	
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	FHitResult HitResult;
 	PlayerController->GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
@@ -97,13 +100,16 @@ void UWeaponComponent::Attack()
 	PlayerCharacter->SetActorRotation(FRotator(0.f, PlayerRotation.Yaw, 0.f));
 	
 	PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
-	bInputAttack = false;
+
 	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.2f);
+	UE_LOG(LogTemp, Warning, TEXT("%s"), bInputAttack ? TEXT("1") : TEXT("0"));
 }
 
 void UWeaponComponent::CanAttack()
 {
 	bInputAttack = true;
+	PlayerCharacter->SetIsAttacking(false);
+	UE_LOG(LogTemp, Warning, TEXT("%s"), bInputAttack ? TEXT("1") : TEXT("0"));
 }
 
 void UWeaponComponent::AttackRange()
