@@ -3,6 +3,7 @@
 #include "Components/DecalComponent.h"
 #include "GameFramework/Character.h"
 #include "HAGJ/Characters/BaseCharacter.h"
+#include "HAGJ/Characters/PlayerCharacter.h"
 #include "HAGJ/Items/Projectiles/BaseProjectile.h"
 #include "HAGJ/Items/Weapons/BaseWeapon.h"
 #include "Kismet/GameplayStatics.h"
@@ -17,7 +18,7 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerCharacter = Cast<ABaseCharacter>(GetOwner());
+	PlayerCharacter = Cast<APlayerCharacter>(GetOwner());
 }
 
 void UWeaponComponent::SpawnWeapon()

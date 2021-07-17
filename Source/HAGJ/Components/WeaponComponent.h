@@ -5,8 +5,9 @@
 #include "HAGJ/Items/Weapons/BaseWeapon.h"
 #include "WeaponComponent.generated.h"
 
+
 class ABaseProjectile;
-class ABaseCharacter;
+class APlayerCharacter;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HAGJ_API UWeaponComponent : public UActorComponent
 {
@@ -63,5 +64,5 @@ protected:
 	TSubclassOf<ABaseProjectile> ProjectileClass;	
 	
 private:
-	ABaseCharacter* PlayerCharacter;
+	APlayerCharacter* PlayerCharacter;
 };
