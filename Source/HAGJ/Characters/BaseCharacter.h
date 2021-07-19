@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "HAGJ/Components/HealthComponent.h"
 #include "HAGJ/Components/WeaponComponent.h"
-
 #include "BaseCharacter.generated.h"
 
 class USpringArmComponent;
@@ -18,31 +17,17 @@ class HAGJ_API ABaseCharacter : public ACharacter
 
 public:
 	ABaseCharacter();
-	virtual void Tick(float DeltaTime) override;
-	
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UHealthComponent* HealthComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UWeaponComponent* WeaponComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UDecalComponent* CursorToWorld;
 
 	// UFUNCTION(BlueprintCallable)
 	// float GetMovementDirection() const;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* ProjectileSpawnPoint;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
-	USoundBase* ReviveSound = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sound")
-	USoundBase* BowSound = nullptr;
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void RotateCharacterToCursor();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Animations")
 	UAnimMontage* DeathAnimMontage = nullptr;
@@ -55,28 +40,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCanShoot = true;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
-	int32 ArrowCount = 10;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
-	int32 LivingWater = 0.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Currency", meta = (ClampMin = 0.f, ClampMax = 999.f, UIMin = 0.f, UIMax = 999.f))
-	int32 Pie = 0.f;
-
+	
 	void SetIsAttacking(bool IsAttacking);
 
 protected:
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UCameraComponent* CameraComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USpringArmComponent* SpringArmComponent;
 	
 	FTimerHandle DeathTimer;
-
 	virtual void OnDeath();
 	
-	//true = player is attacking and can't move
+	//true = character is attacking and can't move
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsAttacking = false;	
 	

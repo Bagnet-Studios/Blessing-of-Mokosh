@@ -35,8 +35,6 @@ private:
 	float MovementSpeed = 1300.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (ClampMin = 0, DefaultMin = 0, AllowPrivateAccess = "true"))
 	float Damage = 50.f;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (ClampMin = 0, DefaultMin = 0, AllowPrivateAccess = "true"))
-	// float DamageMultiplier = 1.0f;
 	
 	//Functions
 	UFUNCTION()

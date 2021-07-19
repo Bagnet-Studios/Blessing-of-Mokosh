@@ -40,7 +40,7 @@ void AEnemyCharacter::BeginPlay()
 	PlayerPawn = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 }
 
-void AEnemyCharacter::RotateTurret(FVector LookAtTarget)
+void AEnemyCharacter::RotateEnemyToPlayer(FVector LookAtTarget)
 {
 	FVector LookAtTargetClean = FVector(LookAtTarget.X, LookAtTarget.Y, GetMesh()->GetComponentLocation().Z);
 	FVector StartLocation = GetMesh()->GetComponentLocation();
@@ -57,7 +57,7 @@ void AEnemyCharacter::CheckFireCondition()
 	}
 	if(ReturnDistanceToPlayer() <= FireRange)
 	{
-		AttackRange();
+		RangeAttack();
 	}
 }
 
@@ -70,7 +70,7 @@ float AEnemyCharacter::ReturnDistanceToPlayer()
 	return FVector::Dist(PlayerPawn->GetActorLocation(), GetActorLocation());
 }
 
-void AEnemyCharacter::AttackRange()
+void AEnemyCharacter::RangeAttack()
 {
 	if(ProjectileClass)
 	{

@@ -31,17 +31,25 @@ protected:
 	TSubclassOf<ABaseProjectile> ProjectileClass;	
 
 	void Tick(float DeltaTime);
+	
 	void BeginPlay();
+	
 	UFUNCTION(BlueprintCallable)
-	void RotateTurret(FVector LookAtTarget);
+	void RotateEnemyToPlayer(FVector LookAtTarget);
+	
+	/** Checks range attack possibility depending on the distance to player **/
 	void CheckFireCondition();
+	
 	float ReturnDistanceToPlayer();
-	void AttackRange();
+	
+	void RangeAttack();
+	
 	virtual void OnDeath() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void AddMoney();
 
 	ABaseCharacter* PlayerPawn = nullptr;
+	
 	FTimerHandle FireRateTimerHandle;
 };

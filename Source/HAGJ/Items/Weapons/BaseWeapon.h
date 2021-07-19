@@ -15,10 +15,11 @@ class HAGJ_API ABaseWeapon : public AActor
 public:	
 	ABaseWeapon();
 
-	virtual void Attack();
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	                  int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	/** Sets mesh class to a null pointer**/
 	void OnHolderDeath();
 
 protected:
@@ -29,6 +30,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UDamageType> DamageType;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float Damage = 50.f;
 

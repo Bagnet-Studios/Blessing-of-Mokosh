@@ -21,6 +21,7 @@ public:
 	UHealthComponent();
 
 	float GetHealth() const { return Health; }
+	
 	UFUNCTION(BlueprintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
@@ -35,7 +36,7 @@ protected:
 
 private:	
 	
-	
+	/** Decreasing health after taking damage, implementing living water revive if damaged actor is a player**/
 	UFUNCTION()
 	void OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 

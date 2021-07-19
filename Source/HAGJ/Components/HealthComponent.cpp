@@ -4,6 +4,7 @@
 #include "HealthComponent.h"
 
 #include "HAGJ/Characters/BaseCharacter.h"
+#include "HAGJ/Characters/PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 UHealthComponent::UHealthComponent()
@@ -44,7 +45,7 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 	
 	if(IsDead()) 
 	{
-		ABaseCharacter* Character = Cast<ABaseCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		APlayerCharacter* Character = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		if(DamagedActor == Character)
 		{
 			if(Character->LivingWater == 0.f)
