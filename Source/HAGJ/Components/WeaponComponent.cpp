@@ -8,6 +8,7 @@
 #include "HAGJ/Items/Weapons/BaseWeapon.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetStringLibrary.h"
 
 UWeaponComponent::UWeaponComponent()
 {
@@ -75,6 +76,42 @@ void UWeaponComponent::DeSpawnWeapon() const
 
 void UWeaponComponent::Attack()
 {
+	//Combo Attack Mode
+	if(!PlayerCharacter->GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
+	{
+		if(!CurrentWeapon
+			|| PlayerCharacter->HealthComponent->IsDead()
+			|| bInputAttack == false
+			|| !PlayerCharacter->MeleeAnimMontage)
+		{
+			return;
+		}
+
+		bInputAttack = false;
+		PlayerCharacter->SetIsAttacking(true);
+	
+		RotateCharacterToCursor();
+	
+		float MeleeAttackAnimationDuration = PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
+		GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.5f);
+	}
+	else if(PlayerCharacter->GetMesh()->GetAnimInstance()->Montage_IsPlaying(PlayerCharacter->MeleeAnimMontage))
+	{
+		bInputAttack = false;
+		FName CurrentMontageName = PlayerCharacter->GetMesh()->GetAnimInstance()->Montage_GetCurrentSection(PlayerCharacter->GetMesh()->GetAnimInstance()->GetCurrentActiveMontage());
+		if(UKismetStringLibrary::Contains(CurrentMontageName.ToString(),  TEXT("ComboWindow")))
+		{
+			CurrentMontageName = PlayerCharacter->GetMesh()->GetAnimInstance()->Montage_GetCurrentSection(PlayerCharacter->GetMesh()->GetAnimInstance()->GetCurrentActiveMontage());
+			FString NumberOfNextAttackPrefix = UKismetMathLibrary::SelectString(TEXT("02"), TEXT("03"), UKismetStringLibrary::Contains(CurrentMontageName.ToString(),TEXT("01")));
+			FName NextAnimationAttackSectionName = (FName)NumberOfNextAttackPrefix.Append("GenericAttack");
+
+			PlayerCharacter->GetMesh()->GetAnimInstance()->Montage_SetNextSection(CurrentMontageName, NextAnimationAttackSectionName, PlayerCharacter->GetMesh()->GetAnimInstance()->GetCurrentActiveMontage());
+		}
+		GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, 1.5f);
+	}
+
+	//Single Attack Mode
+	/**
 	if(!CurrentWeapon
 		|| PlayerCharacter->HealthComponent->IsDead()
 		|| bInputAttack == false
@@ -82,7 +119,7 @@ void UWeaponComponent::Attack()
 	{
 		return;
 	}
-
+	
 	bInputAttack = false;
 	PlayerCharacter->SetIsAttacking(true);
 	
@@ -90,6 +127,7 @@ void UWeaponComponent::Attack()
 	
 	float MeleeAttackAnimationDuration = PlayerCharacter->PlayAnimMontage(PlayerCharacter->MeleeAnimMontage);
 	GetWorld()->GetTimerManager().SetTimer(AttackAnimTimer, this, &UWeaponComponent::CanAttack, 1.0f, false, MeleeAttackAnimationDuration);
+	**/
 }
 
 void UWeaponComponent::CanAttack()
